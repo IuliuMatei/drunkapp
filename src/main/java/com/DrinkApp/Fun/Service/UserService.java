@@ -4,9 +4,11 @@ import com.DrinkApp.Fun.Dto.UserDto;
 import com.DrinkApp.Fun.Entity.UserEntity;
 import com.DrinkApp.Fun.Mapper.UserMapper;
 import com.DrinkApp.Fun.Repository.UserRepo;
+import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@Service
 public class UserService {
     private final UserRepo userRepo;
     private final UserMapper userMapper;
@@ -17,6 +19,6 @@ public class UserService {
     }
 
     public Optional<UserDto> findUserByUsername(String username){
-        return userRepo.findByUsername(username).map(userMapper::toDto);
+        return userRepo.findByUname(username).map(userMapper::toDto);
     }
 }

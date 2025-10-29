@@ -24,7 +24,7 @@ public class UserEntity implements UserDetails { // neaparat trb UserDetailt pt 
 
     private String uname;
     private String email;
-    private String fullName;
+    private String password;
     private String profilePicture;
 
     @Column(name = "created_at")
