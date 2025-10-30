@@ -22,7 +22,10 @@ public class UserEntity implements UserDetails { // neaparat trb UserDetailt pt 
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(nullable = false, unique = true)
     private String uname;
+
+    @Column(nullable = false, unique = true)
     private String email;
     private String password;
     private String profilePicture;
@@ -40,7 +43,7 @@ public class UserEntity implements UserDetails { // neaparat trb UserDetailt pt 
 
     @Override
     public String getPassword() {
-        return "";
+        return password;
     }
 
     @Override
@@ -65,7 +68,7 @@ public class UserEntity implements UserDetails { // neaparat trb UserDetailt pt 
 
     @Override
     public boolean isEnabled() {
-        return false;
+        return true;
     }
 }
 
