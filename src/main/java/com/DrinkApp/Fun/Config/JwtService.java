@@ -73,7 +73,7 @@ public class JwtService {
                 .parserBuilder()
                 .setSigningKey(getSignInKey()) //a secret used to digitally sign the jwt, used to create the signature part of the jwt
                 .build()
-                .parseClaimsJwt(jwt)
+                .parseClaimsJws(jwt)
                 .getBody();
     }
 
