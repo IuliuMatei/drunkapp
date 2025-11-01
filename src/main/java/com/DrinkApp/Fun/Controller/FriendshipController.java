@@ -1,6 +1,6 @@
 package com.DrinkApp.Fun.Controller;
 
-import com.DrinkApp.Fun.Service.FriendshipService;
+import com.DrinkApp.Fun.Service.Interfaces.FriendshipService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;

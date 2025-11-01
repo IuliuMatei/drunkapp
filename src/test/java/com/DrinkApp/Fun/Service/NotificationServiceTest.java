@@ -7,6 +7,7 @@ import com.DrinkApp.Fun.Enums.Role;
 import com.DrinkApp.Fun.Mapper.NotificationMapper;
 import com.DrinkApp.Fun.Repository.NotificationRepo;
 import com.DrinkApp.Fun.Repository.UserRepo;
+import com.DrinkApp.Fun.Service.Implementation.NotificationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

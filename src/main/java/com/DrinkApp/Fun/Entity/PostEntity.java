@@ -31,12 +31,18 @@ public class PostEntity {
 
     private LocalDateTime createdAt = LocalDateTime.now();
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PhotoEntity> photos;
+    @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
+    private PhotoEntity photo;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostLikeEntity> likes;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<PostCommentEntity> comments;
+
+    private Double targetAmount;
+    private Double currentAmount = 0.0;
+    private String donationLink;
+
+    public boolean canHavePhoto() {
+        return this.postType == PostType.ACTIVITY;
+    }
 }

@@ -1,9 +1,8 @@
-package com.DrinkApp.Fun.Service;
+package com.DrinkApp.Fun.Service.Interfaces;
 
 import com.DrinkApp.Fun.Entity.UserEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 

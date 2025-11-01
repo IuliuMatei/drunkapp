@@ -1,13 +1,15 @@
-package com.DrinkApp.Fun.Controller;
+package com.DrinkApp.Fun.Service.Auth;
 
-import com.DrinkApp.Fun.Config.JwtService;
+import com.DrinkApp.Fun.Utils.Auth.AuthenticationRequest;
+import com.DrinkApp.Fun.Utils.Auth.AuthenticationResponse;
+import com.DrinkApp.Fun.Utils.Auth.RegisterRequest;
+import com.DrinkApp.Fun.Service.Jwt.JwtService;
 import com.DrinkApp.Fun.Entity.UserEntity;
 import com.DrinkApp.Fun.Enums.Role;
 import com.DrinkApp.Fun.Repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 

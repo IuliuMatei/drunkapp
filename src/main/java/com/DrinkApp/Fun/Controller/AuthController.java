@@ -1,6 +1,10 @@
 package com.DrinkApp.Fun.Controller;
 
 
+import com.DrinkApp.Fun.Service.Auth.AuthService;
+import com.DrinkApp.Fun.Utils.Auth.AuthenticationRequest;
+import com.DrinkApp.Fun.Utils.Auth.AuthenticationResponse;
+import com.DrinkApp.Fun.Utils.Auth.RegisterRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;

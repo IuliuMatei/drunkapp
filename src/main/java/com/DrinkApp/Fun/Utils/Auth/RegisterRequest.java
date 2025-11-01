@@ -1,4 +1,4 @@
-package com.DrinkApp.Fun.Controller;
+package com.DrinkApp.Fun.Utils.Auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,11 +1,12 @@
 package com.DrinkApp.Fun.Service;
 
 import com.DrinkApp.Fun.Entity.FriendshipEntity;
-import com.DrinkApp.Fun.Entity.NotificationEntity;
 import com.DrinkApp.Fun.Entity.UserEntity;
+import com.DrinkApp.Fun.Enums.Status;
 import com.DrinkApp.Fun.Repository.FriendshipRepo;
-import com.DrinkApp.Fun.Repository.NotificationRepo;
 import com.DrinkApp.Fun.Repository.UserRepo;
+import com.DrinkApp.Fun.Service.Implementation.FriendshipServiceImpl;
+import com.DrinkApp.Fun.Service.Interfaces.NotificationService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -15,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -23,25 +25,24 @@ import static org.mockito.Mockito.*;
 public class FriendshipServiceTest {
 
     @Mock
-    UserRepo userRepo;
+    private UserRepo userRepo;
 
     @Mock
-    FriendshipRepo friendshipRepo;
+    private FriendshipRepo friendshipRepo;
 
     @Mock
-    NotificationRepo notificationRepo;
+    private NotificationService notificationService;
 
     @InjectMocks
-    FriendshipServiceImpl friendshipService;
+    private FriendshipServiceImpl friendshipService;
 
     private UserEntity requester;
     private UserEntity receiver;
     private UserDetails requesterDetails;
 
     @BeforeEach
-    void setUp(){
-
-        MockitoAnnotations.openMocks(this); //initializeaza toate campurile din test care au anotari mockito
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
 
         requester = UserEntity.builder()
                 .id(1L)
@@ -59,7 +60,6 @@ public class FriendshipServiceTest {
                 .password("pass")
                 .roles("USER")
                 .build();
-
     }
 
     @Test
@@ -72,7 +72,8 @@ public class FriendshipServiceTest {
 
         assertEquals(200, response.getStatusCodeValue());
         verify(friendshipRepo, times(1)).save(any(FriendshipEntity.class));
-        verify(notificationRepo, times(1)).save(any(NotificationEntity.class));
+        verify(notificationService, times(1))
+                .sendNotification(eq("john@example.com"), anyString(), eq("INDIVIDUAL"), eq(List.of(receiver)));
     }
 
     @Test
@@ -83,7 +84,7 @@ public class FriendshipServiceTest {
 
         assertEquals(404, response.getStatusCodeValue());
         verify(friendshipRepo, never()).save(any());
-        verify(notificationRepo, never()).save(any());
+        verify(notificationService, never()).sendNotification(any(), any(), any(), any());
     }
 
     @Test
@@ -94,6 +95,8 @@ public class FriendshipServiceTest {
         ResponseEntity<String> response = friendshipService.sendFriendshipRequest(requesterDetails, "mike");
 
         assertEquals(401, response.getStatusCodeValue());
+        verify(friendshipRepo, never()).save(any());
+        verify(notificationService, never()).sendNotification(any(), any(), any(), any());
     }
 
     @Test
@@ -104,6 +107,8 @@ public class FriendshipServiceTest {
         ResponseEntity<String> response = friendshipService.sendFriendshipRequest(requesterDetails, "john");
 
         assertEquals(400, response.getStatusCodeValue());
+        verify(friendshipRepo, never()).save(any());
+        verify(notificationService, never()).sendNotification(any(), any(), any(), any());
     }
 
     @Test
@@ -117,6 +122,6 @@ public class FriendshipServiceTest {
 
         assertEquals(409, response.getStatusCodeValue());
         verify(friendshipRepo, never()).save(any());
-        verify(notificationRepo, never()).save(any());
+        verify(notificationService, never()).sendNotification(any(), any(), any(), any());
     }
 }

@@ -1,5 +1,6 @@
 package com.DrinkApp.Fun.Config;
 
+import com.DrinkApp.Fun.Service.Jwt.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

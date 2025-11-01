@@ -1,8 +1,7 @@
 package com.DrinkApp.Fun.Controller;
 
 import com.DrinkApp.Fun.Dto.NotificationDto;
-import com.DrinkApp.Fun.Entity.NotificationEntity;
-import com.DrinkApp.Fun.Service.NotificationService;
+import com.DrinkApp.Fun.Service.Interfaces.NotificationService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
