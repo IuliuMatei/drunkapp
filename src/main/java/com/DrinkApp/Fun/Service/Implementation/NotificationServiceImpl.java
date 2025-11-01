@@ -58,6 +58,8 @@ public class NotificationServiceImpl implements NotificationService {
 
         NotificationSender senderStrategy = notificationSenderFactory.getSender(type);
 
+        System.out.println("Inainte de send");
+
         senderStrategy.send(sender, message, recipients);
     }
 }

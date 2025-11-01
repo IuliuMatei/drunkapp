@@ -2,6 +2,7 @@ package com.DrinkApp.Fun.Utils.Notification;
 
 import com.DrinkApp.Fun.Entity.NotificationEntity;
 import com.DrinkApp.Fun.Entity.UserEntity;
+import com.DrinkApp.Fun.Enums.NotificationType;
 import com.DrinkApp.Fun.Repository.NotificationRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.mail.SimpleMailMessage;
@@ -32,6 +33,7 @@ public class BroadcastNotificationSender implements NotificationSender {
                     .sender(sender)
                     .recipient(recipient)
                     .message(message)
+                    .type(NotificationType.DONATION)
                     .isRead(false)
                     .build());
 
