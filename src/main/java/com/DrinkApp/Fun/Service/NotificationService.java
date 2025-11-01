@@ -8,4 +8,6 @@ import java.util.List;
 public interface NotificationService {
 
     List<NotificationDto> getAll(UserDetails userDetails);
+
+    boolean markRead(UserDetails userDetails);
 }

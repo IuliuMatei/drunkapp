@@ -8,7 +8,6 @@ import com.DrinkApp.Fun.Repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import java.util.List;
 import java.util.Optional;
@@ -32,5 +31,18 @@ public class NotificationServiceImpl implements NotificationService{
         }
 
         return notificationRepo.getAllByRecipient(recipient.get()).stream().map(notificationMapper::entityToDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean markRead(UserDetails userDetails) {
+        Optional<UserEntity> currentUser = userRepo.findByEmail(userDetails.getUsername());
+
+        if (currentUser.isEmpty()){
+            return false;
+        }
+
+        notificationRepo.markAllNotificationsRead(currentUser.get());
+
+        return true;
     }
 }

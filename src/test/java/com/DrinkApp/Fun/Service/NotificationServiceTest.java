@@ -85,12 +85,10 @@ public class NotificationServiceTest {
                 .message("Salut!")
                 .build();
 
-        // 🔹 comportament mock-uri
         when(userRepo.findByEmail("john@example.com")).thenReturn(Optional.of(userEntity));
         when(notificationRepo.getAllByRecipient(userEntity)).thenReturn(List.of(notif1));
         when(notificationMapper.entityToDto(notif1)).thenReturn(dto1);
 
-        // 🔹 apelăm metoda reală
         List<NotificationDto> result = notificationService.getAll(userDetails);
 
         assertEquals(1, result.size());
@@ -100,5 +98,27 @@ public class NotificationServiceTest {
         verify(notificationRepo, times(1)).getAllByRecipient(userEntity);
         verify(notificationMapper, times(1)).entityToDto(notif1);
 
+    }
+
+    @Test
+    void givenUserNotFound_whenMarkRead_thenReturnFalse() {
+        when(userRepo.findByEmail(userDetails.getUsername())).thenReturn(Optional.empty());
+
+        boolean result = notificationService.markRead(userDetails);
+
+        assertFalse(result);
+        verify(userRepo, times(1)).findByEmail("john@example.com");
+        verifyNoInteractions(notificationRepo);
+    }
+
+    @Test
+    void givenUserFound_whenMarkRead_thenUpdateAllNotifications() {
+        when(userRepo.findByEmail("john@example.com")).thenReturn(Optional.of(userEntity));
+
+        boolean result = notificationService.markRead(userDetails);
+
+        assertTrue(result);
+        verify(userRepo, times(1)).findByEmail("john@example.com");
+        verify(notificationRepo, times(1)).markAllNotificationsRead(userEntity);
     }
 }
