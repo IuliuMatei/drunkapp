@@ -1,7 +1,7 @@
 package com.DrinkApp.Fun.Entity;
 
 
-import com.DrinkApp.Fun.Enums.Role;
+import com.DrinkApp.Fun.Utils.Enums.Role;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;

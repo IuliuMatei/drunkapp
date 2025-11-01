@@ -1,4 +1,4 @@
-package com.DrinkApp.Fun.Enums;
+package com.DrinkApp.Fun.Utils.Enums;
 
 public enum Status {
     PENDING, ACCEPTED, DECLINED

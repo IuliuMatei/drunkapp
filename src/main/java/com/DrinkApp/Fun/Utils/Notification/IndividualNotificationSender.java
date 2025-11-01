@@ -2,7 +2,7 @@ package com.DrinkApp.Fun.Utils.Notification;
 
 import com.DrinkApp.Fun.Entity.NotificationEntity;
 import com.DrinkApp.Fun.Entity.UserEntity;
-import com.DrinkApp.Fun.Enums.NotificationType;
+import com.DrinkApp.Fun.Utils.Enums.NotificationType;
 import com.DrinkApp.Fun.Repository.NotificationRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

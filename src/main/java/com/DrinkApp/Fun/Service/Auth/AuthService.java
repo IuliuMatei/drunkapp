@@ -5,7 +5,7 @@ import com.DrinkApp.Fun.Utils.Auth.AuthenticationResponse;
 import com.DrinkApp.Fun.Utils.Auth.RegisterRequest;
 import com.DrinkApp.Fun.Service.Jwt.JwtService;
 import com.DrinkApp.Fun.Entity.UserEntity;
-import com.DrinkApp.Fun.Enums.Role;
+import com.DrinkApp.Fun.Utils.Enums.Role;
 import com.DrinkApp.Fun.Repository.UserRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;

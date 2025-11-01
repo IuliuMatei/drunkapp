@@ -1,6 +1,6 @@
 package com.DrinkApp.Fun.Entity;
 
-import com.DrinkApp.Fun.Enums.Status;
+import com.DrinkApp.Fun.Utils.Enums.Status;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;

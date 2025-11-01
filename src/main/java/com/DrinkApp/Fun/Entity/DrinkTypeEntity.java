@@ -1,6 +1,6 @@
 package com.DrinkApp.Fun.Entity;
 
-import com.DrinkApp.Fun.Enums.DrinkName;
+import com.DrinkApp.Fun.Utils.Enums.DrinkName;
 import jakarta.persistence.*;
 import lombok.*;
 

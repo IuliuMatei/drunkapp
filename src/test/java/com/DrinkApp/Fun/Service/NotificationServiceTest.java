@@ -3,7 +3,7 @@ package com.DrinkApp.Fun.Service;
 import com.DrinkApp.Fun.Dto.NotificationDto;
 import com.DrinkApp.Fun.Entity.NotificationEntity;
 import com.DrinkApp.Fun.Entity.UserEntity;
-import com.DrinkApp.Fun.Enums.Role;
+import com.DrinkApp.Fun.Utils.Enums.Role;
 import com.DrinkApp.Fun.Mapper.NotificationMapper;
 import com.DrinkApp.Fun.Repository.NotificationRepo;
 import com.DrinkApp.Fun.Repository.UserRepo;

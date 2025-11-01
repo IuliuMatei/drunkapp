@@ -1,8 +1,7 @@
 package com.DrinkApp.Fun.Dto;
 
 import com.DrinkApp.Fun.Entity.UserEntity;
-import com.DrinkApp.Fun.Enums.NotificationType;
-import jakarta.persistence.*;
+import com.DrinkApp.Fun.Utils.Enums.NotificationType;
 import lombok.*;
 import java.time.LocalDateTime;
 

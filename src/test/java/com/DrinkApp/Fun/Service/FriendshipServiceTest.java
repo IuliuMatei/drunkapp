@@ -2,7 +2,6 @@ package com.DrinkApp.Fun.Service;
 
 import com.DrinkApp.Fun.Entity.FriendshipEntity;
 import com.DrinkApp.Fun.Entity.UserEntity;
-import com.DrinkApp.Fun.Enums.Status;
 import com.DrinkApp.Fun.Repository.FriendshipRepo;
 import com.DrinkApp.Fun.Repository.UserRepo;
 import com.DrinkApp.Fun.Service.Implementation.FriendshipServiceImpl;
