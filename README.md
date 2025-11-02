@@ -1,5 +1,11 @@
 # 🍹 DrinkApp — The Ultimate Drink Challenge with Friends
 
+![Java](https://img.shields.io/badge/Java-21-orange?logo=openjdk)
+![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.x-brightgreen?logo=springboot)
+![React](https://img.shields.io/badge/Frontend-React-blue?logo=react)
+![Database](https://img.shields.io/badge/Database-MySQL%20%7C%20PostgreSQL-lightgrey?logo=mysql)
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+
 ---
 
 ## 🧭 Overview
