@@ -14,4 +14,8 @@ public interface FriendshipService {
     Optional<UserEntity> getUserByUsername(String username);
 
     Optional<UserEntity> getUserByEmail(String email);
+
+    boolean acceptFriendRequest(UserDetails userDetails, Long referenceId);
+
+    boolean declineFriendRequest(UserDetails userDetails, Long referenceId);
 }

@@ -10,6 +10,7 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -35,6 +36,7 @@ public class BroadcastNotificationSender implements NotificationSender {
                     .message(message)
                     .type(NotificationType.DONATION)
                     .isRead(false)
+                    .createdAt(LocalDateTime.now())
                     .build());
 
             try {

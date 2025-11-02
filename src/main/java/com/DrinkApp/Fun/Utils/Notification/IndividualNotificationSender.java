@@ -7,6 +7,7 @@ import com.DrinkApp.Fun.Repository.NotificationRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Component
@@ -22,7 +23,6 @@ public class IndividualNotificationSender implements NotificationSender {
 
     @Override
     public void send(UserEntity sender, String message, List<UserEntity> recipients) {
-        System.out.println("Fix in send");
         if (recipients == null || recipients.isEmpty()) return;
 
         UserEntity recipient = recipients.getFirst();
@@ -33,6 +33,7 @@ public class IndividualNotificationSender implements NotificationSender {
                 .message(message)
                 .type(NotificationType.FRIEND_REQUEST)
                 .isRead(false)
+                .createdAt(LocalDateTime.now())
                 .build());
 
     }
