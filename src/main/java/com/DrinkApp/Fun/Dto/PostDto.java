@@ -25,7 +25,7 @@ public class PostDto {
     private PostType postType;
     private String description;
     private LocalDateTime createdAt;
-    private PhotoEntity photo;
+    private String imageUrl;
     private List<PostCommentEntity> comments;
     private Double targetAmount;
     private Double currentAmount = 0.0;

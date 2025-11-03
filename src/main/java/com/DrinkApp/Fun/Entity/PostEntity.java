@@ -1,5 +1,6 @@
 package com.DrinkApp.Fun.Entity;
 
+import com.DrinkApp.Fun.Utils.Enums.DrinkName;
 import com.DrinkApp.Fun.Utils.Enums.PostType;
 import jakarta.persistence.*;
 import lombok.*;
@@ -34,15 +35,8 @@ public class PostEntity {
     @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private PhotoEntity photo;
 
+    @Enumerated(EnumType.STRING)
+    private DrinkName drinkName;
 
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PostCommentEntity> comments;
 
-    private Double targetAmount;
-    private Double currentAmount = 0.0;
-    private String donationLink;
-
-    public boolean canHavePhoto() {
-        return this.postType == PostType.ACTIVITY;
-    }
 }

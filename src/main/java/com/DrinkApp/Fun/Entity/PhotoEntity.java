@@ -21,7 +21,7 @@ public class PhotoEntity {
     @JoinColumn(name = "post_id", nullable = false)
     private PostEntity post;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 1000)
     private String imageUrl;
 
 
