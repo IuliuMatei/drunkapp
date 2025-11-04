@@ -36,6 +36,14 @@ public class NotificationController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
+    @GetMapping("/notSeen")
+    public ResponseEntity<?> getNumberNotificationsNotSeen(@AuthenticationPrincipal UserDetails userDetails)
+    {
+        Long notificationNotSeen = notificationService.getNumberNotificationsNotSeen(userDetails);
+
+        return ResponseEntity.status(HttpStatus.OK).body(notificationNotSeen);
+    }
+
 
 
 }

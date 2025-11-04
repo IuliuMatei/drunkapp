@@ -59,12 +59,17 @@ public class FriendshipServiceImpl implements FriendshipService {
         friendshipRepo.save(friendshipEntity);
 
         String message = requester.get().getUname() + " send you a friend request";
-        notificationService.sendNotification(
-                requester.get().getEmail(),
-                message,
-                "INDIVIDUAL",
-                List.of(receiver.get())
-        );
+
+        NotificationEntity newNotification = NotificationEntity.builder()
+                .type(NotificationType.FRIEND_REQUEST)
+                .isRead(false)
+                .sender(requester.get())
+                .recipient(receiver.get())
+                .createdAt(LocalDateTime.now())
+                .referenceId(friendshipEntity.getId())
+                .build();
+
+        notificationRepo.save(newNotification);
 
         return ResponseEntity.ok().build();
     }
@@ -97,12 +102,7 @@ public class FriendshipServiceImpl implements FriendshipService {
         notificationEntity.setIsRead(true);
         notificationRepo.save(notificationEntity);
 
-        notificationService.sendNotification(
-                currentUser.get().getEmail(),
-                currentUser.get().getUname() + " ți-a acceptat cererea de prietenie",
-                "INDIVIDUAL",
-                List.of(notificationEntity.getSender())
-        );
+
 
         return true;
     }

@@ -12,5 +12,5 @@ public interface NotificationService {
 
     boolean markRead(UserDetails userDetails);
 
-    void sendNotification(String senderEmail, String message, String type, List<UserEntity> recipients);
+    Long getNumberNotificationsNotSeen(UserDetails userDetails);
 }

@@ -1,11 +1,9 @@
 package com.DrinkApp.Fun.Entity;
 
 import com.DrinkApp.Fun.Utils.Enums.DrinkName;
-import com.DrinkApp.Fun.Utils.Enums.PostType;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @Table(name = "posts")
@@ -22,10 +20,6 @@ public class PostEntity {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
     private UserEntity user;
-
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
-    private PostType postType;
 
     @Column(columnDefinition = "TEXT")
     private String description;

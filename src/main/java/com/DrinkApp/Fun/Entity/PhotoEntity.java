@@ -21,8 +21,9 @@ public class PhotoEntity {
     @JoinColumn(name = "post_id", nullable = false)
     private PostEntity post;
 
+    @Lob
     @Column(nullable = false, length = 1000)
-    private String imageUrl;
+    private byte[] imageArray;
 
 
     private LocalDateTime createdAt;

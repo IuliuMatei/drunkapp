@@ -6,8 +6,6 @@ import com.DrinkApp.Fun.Mapper.NotificationMapper;
 import com.DrinkApp.Fun.Repository.NotificationRepo;
 import com.DrinkApp.Fun.Repository.UserRepo;
 import com.DrinkApp.Fun.Service.Interfaces.NotificationService;
-import com.DrinkApp.Fun.Utils.Notification.NotificationSender;
-import com.DrinkApp.Fun.Utils.Notification.NotificationSenderFactory;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -23,9 +21,6 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationRepo notificationRepo;
     private final NotificationMapper notificationMapper;
     private final UserRepo userRepo;
-    private final NotificationSenderFactory notificationSenderFactory;
-
-
 
     @Override
     public List<NotificationDto> getAll(UserDetails userDetails) {
@@ -52,14 +47,10 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public void sendNotification(String senderEmail, String message, String type, List<UserEntity> recipients) {
-        UserEntity sender = userRepo.findByEmail(senderEmail)
-                .orElseThrow(() -> new IllegalArgumentException("Sender not found: " + senderEmail));
+    public Long getNumberNotificationsNotSeen(UserDetails userDetails)
+    {
+        UserEntity currentUser = userRepo.findByUname(userDetails.getUsername()).orElseThrow();
 
-        NotificationSender senderStrategy = notificationSenderFactory.getSender(type);
-
-        System.out.println("Inainte de send");
-
-        senderStrategy.send(sender, message, recipients);
+        return notificationRepo.countByRecipientAndIsReadFalse(currentUser);
     }
 }
