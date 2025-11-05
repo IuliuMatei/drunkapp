@@ -6,6 +6,7 @@ import com.DrinkApp.Fun.Mapper.NotificationMapper;
 import com.DrinkApp.Fun.Repository.NotificationRepo;
 import com.DrinkApp.Fun.Repository.UserRepo;
 import com.DrinkApp.Fun.Service.Interfaces.NotificationService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -33,6 +34,7 @@ public class NotificationServiceImpl implements NotificationService {
         return notificationRepo.getAllByRecipient(recipient.get()).stream().map(notificationMapper::entityToDto).collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public boolean markRead(UserDetails userDetails) {
         Optional<UserEntity> currentUser = userRepo.findByEmail(userDetails.getUsername());

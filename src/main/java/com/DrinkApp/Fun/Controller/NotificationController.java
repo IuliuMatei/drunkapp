@@ -22,8 +22,8 @@ public class NotificationController {
     NotificationService notificationService;
 
     @GetMapping("/all")
-    public List<NotificationDto> getAll(@AuthenticationPrincipal UserDetails userDetails){
-        return notificationService.getAll(userDetails);
+    public ResponseEntity<List<NotificationDto>> getAll(@AuthenticationPrincipal UserDetails userDetails){
+        return ResponseEntity.status(HttpStatus.OK).body(notificationService.getAll(userDetails));
     }
 
     @PutMapping("markReadAll")

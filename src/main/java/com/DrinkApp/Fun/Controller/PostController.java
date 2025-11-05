@@ -28,9 +28,9 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/feed")
-    public List<PostDto> getAllPosts(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<List<PostDto>> getAllPosts(@AuthenticationPrincipal UserDetails userDetails) {
 
-        return postService.getAllPosts(userDetails);
+        return ResponseEntity.status(HttpStatus.OK).body(postService.getAllPosts(userDetails));
 
     }
 

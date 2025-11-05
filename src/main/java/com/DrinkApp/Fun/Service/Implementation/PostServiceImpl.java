@@ -10,6 +10,7 @@ import com.DrinkApp.Fun.Repository.UserRepo;
 import com.DrinkApp.Fun.Service.Interfaces.PostService;
 import com.DrinkApp.Fun.Utils.Enums.DrinkName;
 import com.DrinkApp.Fun.Utils.UserProfileResponse;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -42,6 +43,7 @@ public class PostServiceImpl implements PostService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
     @Override
     public boolean savePost(UserDetails userDetails, String description, DrinkName drinkName, MultipartFile image) throws IOException {
 

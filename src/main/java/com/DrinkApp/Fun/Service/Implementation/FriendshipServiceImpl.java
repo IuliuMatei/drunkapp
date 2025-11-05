@@ -10,6 +10,7 @@ import com.DrinkApp.Fun.Repository.FriendshipRepo;
 import com.DrinkApp.Fun.Repository.UserRepo;
 import com.DrinkApp.Fun.Service.Interfaces.FriendshipService;
 import com.DrinkApp.Fun.Service.Interfaces.NotificationService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -29,6 +30,7 @@ public class FriendshipServiceImpl implements FriendshipService {
     private final NotificationService notificationService;
     private final NotificationRepo notificationRepo;
 
+    @Transactional
     @Override
     public ResponseEntity<String> sendFriendshipRequest(UserDetails userDetails, String username) {
 
@@ -74,6 +76,7 @@ public class FriendshipServiceImpl implements FriendshipService {
         return ResponseEntity.ok().build();
     }
 
+    @Transactional
     @Override
     public boolean acceptFriendRequest(UserDetails userDetails, Long referenceId) {
 
@@ -107,6 +110,7 @@ public class FriendshipServiceImpl implements FriendshipService {
         return true;
     }
 
+    @Transactional
     @Override
     public boolean declineFriendRequest(UserDetails userDetails, Long referenceId) {
         Optional<NotificationEntity> notificationOpt = notificationRepo.findById(referenceId);

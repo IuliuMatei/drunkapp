@@ -43,7 +43,7 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.OK).body(imageUploadResponse);
     }
 
-    @GetMapping("/{username}/posts")
+    @GetMapping("/{username}/profile")
     public ResponseEntity<UserProfileResponse> getUserFeed(@AuthenticationPrincipal UserDetails userDetails,
                                                            @PathVariable String username)
     {
