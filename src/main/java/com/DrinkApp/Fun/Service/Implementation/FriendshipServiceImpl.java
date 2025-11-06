@@ -10,6 +10,7 @@ import com.DrinkApp.Fun.Repository.FriendshipRepo;
 import com.DrinkApp.Fun.Repository.UserRepo;
 import com.DrinkApp.Fun.Service.Interfaces.FriendshipService;
 import com.DrinkApp.Fun.Service.Interfaces.NotificationService;
+import com.DrinkApp.Fun.Utils.Exceptions.*;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -34,39 +35,34 @@ public class FriendshipServiceImpl implements FriendshipService {
     @Override
     public ResponseEntity<String> sendFriendshipRequest(UserDetails userDetails, String username) {
 
-        Optional<UserEntity> receiver = getUserByUsername(username);
-        if (receiver.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+        UserEntity receiver = getUserByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
+
+        UserEntity requester = getUserByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
+
+        if (receiver.getId().equals(requester.getId())) {
+            throw new SameUserFriendshipException();
         }
 
-        Optional<UserEntity> requester = getUserByEmail(userDetails.getUsername());
-        if (requester.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
-        }
-
-        if (receiver.get().getId().equals(requester.get().getId())) {
-            return ResponseEntity.badRequest().build();
-        }
-
-        if (friendshipRepo.findByRequesterAndReceiver(requester.get(), receiver.get()).isPresent()) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).build();
+        if (friendshipRepo.findByRequesterAndReceiver(requester, receiver).isPresent()) {
+            throw  new FriendshipAlreadyRequestedException();
         }
 
         FriendshipEntity friendshipEntity = FriendshipEntity.builder()
-                .requester(requester.get())
-                .receiver(receiver.get())
+                .requester(requester)
+                .receiver(receiver)
                 .status(Status.PENDING)
                 .createdAt(LocalDateTime.now())
                 .build();
         friendshipRepo.save(friendshipEntity);
 
-        String message = requester.get().getUname() + " send you a friend request";
+        String message = requester.getUname() + " send you a friend request";
 
         NotificationEntity newNotification = NotificationEntity.builder()
                 .type(NotificationType.FRIEND_REQUEST)
                 .isRead(false)
-                .sender(requester.get())
-                .recipient(receiver.get())
+                .message(message)
+                .sender(requester)
+                .recipient(receiver)
                 .createdAt(LocalDateTime.now())
                 .referenceId(friendshipEntity.getId())
                 .build();
@@ -80,54 +76,43 @@ public class FriendshipServiceImpl implements FriendshipService {
     @Override
     public boolean acceptFriendRequest(UserDetails userDetails, Long referenceId) {
 
-        Optional<NotificationEntity> notification = notificationRepo.findById(referenceId);
-        if (notification.isEmpty()){
+        NotificationEntity notification = notificationRepo.findById(referenceId).orElseThrow(NotificationNotFoundException::new);
+
+        if (!notification.getType().equals(NotificationType.FRIEND_REQUEST)){
             return false;
         }
 
-        NotificationEntity notificationEntity = notification.get();
-        if (!notificationEntity.getType().equals(NotificationType.FRIEND_REQUEST)){
+        UserEntity currentUser = userRepo.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
+        if (!notification.getRecipient().getId().equals(currentUser.getId())) {
             return false;
         }
 
-        Optional<UserEntity> currentUser = userRepo.findByEmail(userDetails.getUsername());
-        if (currentUser.isEmpty() || !notificationEntity.getRecipient().getId().equals(currentUser.get().getId())) {
-            return false;
-        }
+        FriendshipEntity friendship = friendshipRepo.findById(notification.getReferenceId()).orElseThrow(FriendshipNotFoundException::new);
 
-        Optional<FriendshipEntity> friendshipOpt = friendshipRepo.findById(notificationEntity.getReferenceId());
-        if (friendshipOpt.isEmpty()) return false;
-
-        FriendshipEntity friendship = friendshipOpt.get();
         friendship.setStatus(Status.ACCEPTED);
         friendshipRepo.save(friendship);
 
-        notificationEntity.setIsRead(true);
-        notificationRepo.save(notificationEntity);
-
-
+        notification.setIsRead(true);
+        notificationRepo.save(notification);
 
         return true;
     }
 
     @Transactional
     @Override
-    public boolean declineFriendRequest(UserDetails userDetails, Long referenceId) {
-        Optional<NotificationEntity> notificationOpt = notificationRepo.findById(referenceId);
-        if (notificationOpt.isEmpty()) return false;
+    public boolean declineFriendRequest(UserDetails userDetails, Long referenceId)
+    {
+        NotificationEntity notification = notificationRepo.findById(referenceId).orElseThrow(NotificationNotFoundException::new);
 
-        NotificationEntity notification = notificationOpt.get();
         if (notification.getType() != NotificationType.FRIEND_REQUEST) return false;
 
-        Optional<UserEntity> currentUser = userRepo.findByEmail(userDetails.getUsername());
-        if (currentUser.isEmpty() || !notification.getRecipient().getId().equals(currentUser.get().getId())) {
+        UserEntity currentUser = userRepo.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
+        if (!notification.getRecipient().getId().equals(currentUser.getId()))
+        {
             return false;
         }
 
-        Optional<FriendshipEntity> friendshipOpt = friendshipRepo.findById(notification.getReferenceId());
-        if (friendshipOpt.isEmpty()) return false;
-
-        FriendshipEntity friendship = friendshipOpt.get();
+        FriendshipEntity friendship = friendshipRepo.findById(notification.getReferenceId()).orElseThrow(FriendshipNotFoundException::new);
         friendship.setStatus(Status.DECLINED);
         friendshipRepo.save(friendship);
 

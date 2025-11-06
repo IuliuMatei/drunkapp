@@ -1,10 +1,8 @@
 package com.DrinkApp.Fun.Controller;
 
 import com.DrinkApp.Fun.Dto.PostDto;
-import com.DrinkApp.Fun.Entity.PostEntity;
 import com.DrinkApp.Fun.Service.Interfaces.PostService;
 import com.DrinkApp.Fun.Utils.Enums.DrinkName;
-import com.DrinkApp.Fun.Utils.UserProfileResponse;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;

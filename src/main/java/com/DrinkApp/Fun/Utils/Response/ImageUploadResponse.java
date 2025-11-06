@@ -1,4 +1,4 @@
-package com.DrinkApp.Fun.Utils;
+package com.DrinkApp.Fun.Utils.Response;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

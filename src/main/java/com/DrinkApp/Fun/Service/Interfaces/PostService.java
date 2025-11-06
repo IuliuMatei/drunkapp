@@ -2,7 +2,7 @@ package com.DrinkApp.Fun.Service.Interfaces;
 
 import com.DrinkApp.Fun.Dto.PostDto;
 import com.DrinkApp.Fun.Utils.Enums.DrinkName;
-import com.DrinkApp.Fun.Utils.UserProfileResponse;
+import com.DrinkApp.Fun.Utils.Response.UserProfileResponse;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.multipart.MultipartFile;
 

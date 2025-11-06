@@ -3,11 +3,10 @@ package com.DrinkApp.Fun.Controller;
 import com.DrinkApp.Fun.Dto.UserDto;
 import com.DrinkApp.Fun.Service.Interfaces.PostService;
 import com.DrinkApp.Fun.Service.UserService;
-import com.DrinkApp.Fun.Utils.ImageUploadResponse;
-import com.DrinkApp.Fun.Utils.UserProfileResponse;
+import com.DrinkApp.Fun.Utils.Response.ImageUploadResponse;
+import com.DrinkApp.Fun.Utils.Response.UserProfileResponse;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.autoconfigure.graphql.GraphQlProperties;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -32,7 +31,7 @@ public class UserController {
         return userDtoOptional.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 
-    @PostMapping("/{username}/savePhoto")
+    @PostMapping("/{username}/save-photo")
     public ResponseEntity<?> postProfilePicture(@AuthenticationPrincipal UserDetails userDetails,
                                                 @NotNull
                                                 @RequestParam("image") MultipartFile image) throws IOException

@@ -1,18 +1,16 @@
 package com.DrinkApp.Fun.Service;
 
 import com.DrinkApp.Fun.Dto.UserDto;
-import com.DrinkApp.Fun.Entity.PhotoEntity;
 import com.DrinkApp.Fun.Entity.UserEntity;
 import com.DrinkApp.Fun.Mapper.UserMapper;
 import com.DrinkApp.Fun.Repository.UserRepo;
-import com.DrinkApp.Fun.Utils.ImageUploadResponse;
+import com.DrinkApp.Fun.Utils.Response.ImageUploadResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.Optional;
 
 @Service

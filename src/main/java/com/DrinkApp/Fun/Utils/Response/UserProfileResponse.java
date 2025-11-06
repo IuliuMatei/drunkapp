@@ -1,4 +1,4 @@
-package com.DrinkApp.Fun.Utils;
+package com.DrinkApp.Fun.Utils.Response;
 
 import com.DrinkApp.Fun.Dto.PostDto;
 import lombok.AllArgsConstructor;

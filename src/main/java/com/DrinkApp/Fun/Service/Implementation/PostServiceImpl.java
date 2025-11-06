@@ -9,7 +9,7 @@ import com.DrinkApp.Fun.Repository.PostRepo;
 import com.DrinkApp.Fun.Repository.UserRepo;
 import com.DrinkApp.Fun.Service.Interfaces.PostService;
 import com.DrinkApp.Fun.Utils.Enums.DrinkName;
-import com.DrinkApp.Fun.Utils.UserProfileResponse;
+import com.DrinkApp.Fun.Utils.Response.UserProfileResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,7 +19,6 @@ import org.springframework.web.multipart.MultipartFile;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 @Service

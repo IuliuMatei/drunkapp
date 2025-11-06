@@ -26,7 +26,7 @@ public class NotificationController {
         return ResponseEntity.status(HttpStatus.OK).body(notificationService.getAll(userDetails));
     }
 
-    @PutMapping("markReadAll")
+    @PutMapping("mark-read")
     public ResponseEntity<Void> markReadAll(@AuthenticationPrincipal UserDetails userDetails){
 
         if (!notificationService.markRead(userDetails)){
@@ -36,7 +36,7 @@ public class NotificationController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).build();
     }
 
-    @GetMapping("/notSeen")
+    @GetMapping("/not-seen")
     public ResponseEntity<?> getNumberNotificationsNotSeen(@AuthenticationPrincipal UserDetails userDetails)
     {
         Long notificationNotSeen = notificationService.getNumberNotificationsNotSeen(userDetails);
