@@ -79,12 +79,12 @@ public class FriendshipServiceImpl implements FriendshipService {
         NotificationEntity notification = notificationRepo.findById(referenceId).orElseThrow(NotificationNotFoundException::new);
 
         if (!notification.getType().equals(NotificationType.FRIEND_REQUEST)){
-            return false;
+            throw new NotificationNotFriendRequest();
         }
 
         UserEntity currentUser = userRepo.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
         if (!notification.getRecipient().getId().equals(currentUser.getId())) {
-            return false;
+            throw new SameUserFriendshipException();
         }
 
         FriendshipEntity friendship = friendshipRepo.findById(notification.getReferenceId()).orElseThrow(FriendshipNotFoundException::new);
@@ -104,12 +104,13 @@ public class FriendshipServiceImpl implements FriendshipService {
     {
         NotificationEntity notification = notificationRepo.findById(referenceId).orElseThrow(NotificationNotFoundException::new);
 
-        if (notification.getType() != NotificationType.FRIEND_REQUEST) return false;
+        if (notification.getType() != NotificationType.FRIEND_REQUEST){
+            throw new NotificationNotFriendRequest();
+        }
 
         UserEntity currentUser = userRepo.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
-        if (!notification.getRecipient().getId().equals(currentUser.getId()))
-        {
-            return false;
+        if (!notification.getRecipient().getId().equals(currentUser.getId())) {
+            throw new SameUserFriendshipException();
         }
 
         FriendshipEntity friendship = friendshipRepo.findById(notification.getReferenceId()).orElseThrow(FriendshipNotFoundException::new);
