@@ -5,9 +5,11 @@ import com.DrinkApp.Fun.Entity.PhotoEntity;
 import com.DrinkApp.Fun.Entity.PostEntity;
 import com.DrinkApp.Fun.Entity.UserEntity;
 import com.DrinkApp.Fun.Mapper.PostMapper;
+import com.DrinkApp.Fun.Repository.PhotoRepo;
 import com.DrinkApp.Fun.Repository.PostRepo;
 import com.DrinkApp.Fun.Repository.UserRepo;
 import com.DrinkApp.Fun.Service.Interfaces.PostService;
+import com.DrinkApp.Fun.Service.Interfaces.S3Service;
 import com.DrinkApp.Fun.Utils.Enums.DrinkName;
 import com.DrinkApp.Fun.Utils.Response.UserProfileResponse;
 import jakarta.transaction.Transactional;
@@ -28,6 +30,8 @@ public class PostServiceImpl implements PostService {
     private final UserRepo userRepo;
     private final PostRepo postRepo;
     private final PostMapper postMapper;
+    private final S3Service s3Service;
+    private final PhotoRepo photoRepo;
 
     @Override
     public List<PostDto> getAllPosts(UserDetails userDetails) {
@@ -49,23 +53,51 @@ public class PostServiceImpl implements PostService {
         UserEntity currentUser = userRepo.findByEmail(userDetails.getUsername())
                 .orElseThrow(() -> new RuntimeException("User not found"));
 
-        int points = getPoints(drinkName);
-        currentUser.setTotalPoints(currentUser.getTotalPoints() + points);
+        switch (drinkName){
+            case BEER -> {
+                currentUser.setNumberBeers(currentUser.getNumberBeers() + 1);
+                currentUser.setTotalPoints(currentUser.getTotalPoints() + 2);
+            }
+            case WHINE -> {
+                currentUser.setNumberWhine(currentUser.getNumberWhine() + 1);
+                currentUser.setTotalPoints(currentUser.getTotalPoints() + 3);
+            }
+            case LONG_DRINK -> {
+                currentUser.setNumberLongDrink(currentUser.getNumberLongDrink() + 1);
+                currentUser.setTotalPoints(currentUser.getTotalPoints() + 4);
+            }
+            case SHOT -> {
+                currentUser.setNumberShot(currentUser.getNumberShot() + 1);
+                currentUser.setTotalPoints(currentUser.getTotalPoints() + 5);
+            }
+            case CIGARRET -> {
+                currentUser.setNumberCigarret(currentUser.getNumberCigarret() + 1);
+                currentUser.setTotalPoints(currentUser.getTotalPoints() + 1);
+            }
+            case HEETS -> {
+                currentUser.setNumberHeets(currentUser.getNumberHeets() + 1);
+                currentUser.setTotalPoints(currentUser.getTotalPoints() + 1);
+            }
+        }
         userRepo.save(currentUser);
 
+        String photoUrl = s3Service.uploadFile(image);
+
         PhotoEntity newPhoto = PhotoEntity.builder()
-                .imageArray(image.getBytes())
+                .image(photoUrl)
                 .createdAt(LocalDateTime.now())
                 .build();
 
         PostEntity newPost = PostEntity.builder()
-                .photo(newPhoto)
+                .image(newPhoto)
                 .user(currentUser)
                 .createdAt(LocalDateTime.now())
                 .drinkName(drinkName)
                 .build();
 
+        newPhoto.setPost(newPost);
         postRepo.save(newPost);
+
         return false;
     }
 
@@ -78,22 +110,10 @@ public class PostServiceImpl implements PostService {
         return UserProfileResponse.builder()
                 .id(user.getId())
                 .username(user.getUname())
-                .userPhoto(user.getProfilePicture())
+                .userPhoto(user.getImage())
                 .totalPoints(user.getTotalPoints())
                 .posts(postsUser)
                 .build();
-    }
-
-    private int getPoints(DrinkName drinkName){
-
-        return switch(drinkName) {
-            case BEER -> 2;
-            case WHINE -> 3;
-            case LONG_DRINK -> 4;
-            case SHOT -> 5;
-            case CIGARRET -> 1;
-            case HEETS -> 0;
-        };
     }
 
 }

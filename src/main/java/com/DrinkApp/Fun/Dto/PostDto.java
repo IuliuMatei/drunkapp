@@ -20,6 +20,6 @@ public class PostDto {
     private UserEntity user;
     private String description;
     private LocalDateTime createdAt;
-    private byte[] imageArray;
+    private String image;
     private DrinkName drinkName;
 }

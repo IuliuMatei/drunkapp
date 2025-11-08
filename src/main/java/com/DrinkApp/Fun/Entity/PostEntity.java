@@ -27,7 +27,7 @@ public class PostEntity {
     private LocalDateTime createdAt = LocalDateTime.now();
 
     @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
-    private PhotoEntity photo;
+    private PhotoEntity image;
 
     @Enumerated(EnumType.STRING)
     private DrinkName drinkName;

@@ -28,8 +28,14 @@ public class UserEntity implements UserDetails { // neaparat trb UserDetailt pt 
     @Column(nullable = false, unique = true)
     private String email;
     private String password;
-    private byte[] profilePicture;
+    private String image;
     private Integer totalPoints;
+    private Integer numberBeers;
+    private Integer numberWhine;
+    private Integer numberLongDrink;
+    private Integer numberShot;
+    private Integer numberCigarret;
+    private Integer numberHeets;
 
     @Column(name = "created_at")
     private java.time.LocalDateTime createdAt;

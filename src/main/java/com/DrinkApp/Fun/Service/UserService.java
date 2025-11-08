@@ -4,6 +4,7 @@ import com.DrinkApp.Fun.Dto.UserDto;
 import com.DrinkApp.Fun.Entity.UserEntity;
 import com.DrinkApp.Fun.Mapper.UserMapper;
 import com.DrinkApp.Fun.Repository.UserRepo;
+import com.DrinkApp.Fun.Service.Implementation.S3ServiceImpl;
 import com.DrinkApp.Fun.Utils.Response.ImageUploadResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,6 +19,7 @@ import java.util.Optional;
 public class UserService {
     private final UserRepo userRepo;
     private final UserMapper userMapper;
+    private final S3ServiceImpl s3Service;
 
     public Optional<UserDto> findUserByUsername(String username){
         return userRepo.findByUname(username).map(userMapper::toDto);
@@ -27,7 +29,8 @@ public class UserService {
     {
 
         UserEntity currentUser = userRepo.findByEmail(userDetails.getUsername()).orElseThrow();
-        currentUser.setProfilePicture(image.getBytes());
+        String photoUrl = s3Service.uploadFile(image);
+        currentUser.setImage(photoUrl);
         userRepo.save(currentUser);
 
         return new ImageUploadResponse("Image uploaded successfully");

@@ -16,8 +16,14 @@ public class UserProfileResponse {
 
     private Long id;
     private String username;
-    private byte[] userPhoto;
+    private String userPhoto;
     private Integer totalPoints;
+    private Integer numberBeers;
+    private Integer numberWhine;
+    private Integer numberLongDrink;
+    private Integer numberShot;
+    private Integer numberCigarret;
+    private Integer numberHeets;
     private List<PostDto> posts;
 
 }
