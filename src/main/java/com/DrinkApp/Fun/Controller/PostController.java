@@ -3,6 +3,7 @@ package com.DrinkApp.Fun.Controller;
 import com.DrinkApp.Fun.Dto.PostDto;
 import com.DrinkApp.Fun.Service.Interfaces.PostService;
 import com.DrinkApp.Fun.Utils.Enums.DrinkName;
+import com.DrinkApp.Fun.Utils.Response.PostUploadResponse;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,7 @@ public class PostController {
     }
 
     @PostMapping(consumes = "multipart/form-data")
-    public ResponseEntity<Void> newPost(@AuthenticationPrincipal UserDetails userDetails,
+    public ResponseEntity<?> newPost(@AuthenticationPrincipal UserDetails userDetails,
                                         @NotBlank
                                         @RequestParam("description") String description,
                                         @NotNull
@@ -41,8 +42,9 @@ public class PostController {
                                         @NotNull
                                         @RequestParam("image") MultipartFile image) throws IOException {
 
-        return postService.savePost(userDetails, description, drinkName, image) ?
-                ResponseEntity.status(HttpStatus.CREATED).build() : ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+        PostUploadResponse postUploadResponse = postService.savePost(userDetails, description, drinkName, image);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(postUploadResponse);
 
     }
 }

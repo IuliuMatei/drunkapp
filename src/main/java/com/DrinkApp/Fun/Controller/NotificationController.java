@@ -27,13 +27,13 @@ public class NotificationController {
     }
 
     @PutMapping("mark-read")
-    public ResponseEntity<Void> markReadAll(@AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<?> markReadAll(@AuthenticationPrincipal UserDetails userDetails){
 
         if (!notificationService.markRead(userDetails)){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
         }
 
-        return ResponseEntity.status(HttpStatus.ACCEPTED).build();
+        return ResponseEntity.status(HttpStatus.OK).build();
     }
 
     @GetMapping("/not-seen")

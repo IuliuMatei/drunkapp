@@ -1,7 +1,9 @@
 package com.DrinkApp.Fun.Controller;
 
 import com.DrinkApp.Fun.Service.Interfaces.FriendshipService;
+import com.DrinkApp.Fun.Utils.Response.FriendRequestResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,27 +17,29 @@ public class FriendshipController {
     final FriendshipService friendShipService;
 
     @PostMapping("/request")
-    public ResponseEntity<String> sendFriendRequest(@AuthenticationPrincipal UserDetails userDetails,
+    public ResponseEntity<?> sendFriendRequest(@AuthenticationPrincipal UserDetails userDetails,
                                                     @RequestParam String username) {
-        return friendShipService.sendFriendshipRequest(userDetails, username);
+        FriendRequestResponse friendRequestResponse = friendShipService.sendFriendshipRequest(userDetails, username);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(friendRequestResponse);
     }
 
     @PutMapping("/accept/{referenceId}")
-    public ResponseEntity<Void> acceptFriendRequest(@AuthenticationPrincipal UserDetails userDetails,
+    public ResponseEntity<?> acceptFriendRequest(@AuthenticationPrincipal UserDetails userDetails,
                                                     @PathVariable Long referenceId) {
 
-        boolean success = friendShipService.acceptFriendRequest(userDetails, referenceId);
+        FriendRequestResponse friendRequestResponse = friendShipService.acceptFriendRequest(userDetails, referenceId);
 
-        return success ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(friendRequestResponse);
     }
 
     @PutMapping("/decline/{referenceId}")
-    public ResponseEntity<Void> declineFriendRequest(@AuthenticationPrincipal UserDetails userDetails,
+    public ResponseEntity<?> declineFriendRequest(@AuthenticationPrincipal UserDetails userDetails,
                                                     @PathVariable Long referenceId) {
 
-        boolean success = friendShipService.declineFriendRequest(userDetails, referenceId);
+        FriendRequestResponse friendRequestResponse = friendShipService.declineFriendRequest(userDetails, referenceId);
 
-        return success ? ResponseEntity.ok().build() : ResponseEntity.badRequest().build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(friendRequestResponse);
     }
 
 

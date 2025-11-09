@@ -14,4 +14,8 @@ public interface FriendshipRepo extends JpaRepository<FriendshipEntity, Long> {
 
     Optional<FriendshipEntity> findByRequesterAndReceiver(UserEntity requester, UserEntity receiver);
 
+    Optional<FriendshipEntity> findByRequesterAndReceiverAndStatus(UserEntity requester, UserEntity receiver, Status status);
+
+    Optional<FriendshipEntity> findByReceiverAndRequesterAndStatus(UserEntity receiver, UserEntity requester, Status status);
+
 }

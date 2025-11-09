@@ -1,0 +1,44 @@
+package com.DrinkApp.Fun.Config;
+
+import jakarta.servlet.*;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
+
+public class RateLimitingFilter implements Filter {
+
+    private static final int MAX_REQUESTS_PER_MINUTE = 5;
+    private final Map<String, AtomicInteger> requestCounts = new ConcurrentHashMap<>();
+
+    public RateLimitingFilter() {
+        Executors.newSingleThreadScheduledExecutor().scheduleAtFixedRate(
+                requestCounts::clear, 1, 1, TimeUnit.MINUTES
+        );
+    }
+
+    @Override
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws IOException, ServletException {
+
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        HttpServletResponse httpResponse = (HttpServletResponse) response;
+
+        String clientIp = httpRequest.getRemoteAddr();
+        requestCounts.putIfAbsent(clientIp, new AtomicInteger(0));
+        int currentCount = requestCounts.get(clientIp).incrementAndGet();
+
+        if (currentCount > MAX_REQUESTS_PER_MINUTE) {
+            httpResponse.setStatus(429);
+            httpResponse.getWriter().write("Too many requests. Please try again later.");
+            return;
+        }
+
+        chain.doFilter(request, response);
+    }
+}

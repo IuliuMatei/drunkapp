@@ -5,15 +5,21 @@ import com.DrinkApp.Fun.Entity.PhotoEntity;
 import com.DrinkApp.Fun.Entity.PostEntity;
 import com.DrinkApp.Fun.Entity.UserEntity;
 import com.DrinkApp.Fun.Mapper.PostMapper;
+import com.DrinkApp.Fun.Repository.FriendshipRepo;
 import com.DrinkApp.Fun.Repository.PhotoRepo;
 import com.DrinkApp.Fun.Repository.PostRepo;
 import com.DrinkApp.Fun.Repository.UserRepo;
 import com.DrinkApp.Fun.Service.Interfaces.PostService;
 import com.DrinkApp.Fun.Service.Interfaces.S3Service;
 import com.DrinkApp.Fun.Utils.Enums.DrinkName;
+import com.DrinkApp.Fun.Utils.Enums.Status;
+import com.DrinkApp.Fun.Utils.Exceptions.CurrentUserNotFoundException;
+import com.DrinkApp.Fun.Utils.Response.PostUploadResponse;
 import com.DrinkApp.Fun.Utils.Response.UserProfileResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,7 +37,7 @@ public class PostServiceImpl implements PostService {
     private final PostRepo postRepo;
     private final PostMapper postMapper;
     private final S3Service s3Service;
-    private final PhotoRepo photoRepo;
+    private final FriendshipRepo friendshipRepo;
 
     @Override
     public List<PostDto> getAllPosts(UserDetails userDetails) {
@@ -48,10 +54,10 @@ public class PostServiceImpl implements PostService {
 
     @Transactional
     @Override
-    public boolean savePost(UserDetails userDetails, String description, DrinkName drinkName, MultipartFile image) throws IOException {
+    public PostUploadResponse savePost(UserDetails userDetails, String description, DrinkName drinkName, MultipartFile image) throws IOException {
 
         UserEntity currentUser = userRepo.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(CurrentUserNotFoundException::new);
 
         switch (drinkName){
             case BEER -> {
@@ -98,12 +104,25 @@ public class PostServiceImpl implements PostService {
         newPhoto.setPost(newPost);
         postRepo.save(newPost);
 
-        return false;
+        return new PostUploadResponse("Post uploaded successfully");
     }
 
     @Override
     public UserProfileResponse getFeedByUser(String username) {
         UserEntity user = userRepo.findByUname(username).orElseThrow(() -> new RuntimeException("User not found"));
+
+        String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
+        UserEntity currentUser = userRepo.findByEmail(currentEmail)
+                .orElseThrow(CurrentUserNotFoundException::new);
+
+        if (!currentUser.getId().equals(user.getId())) {
+            boolean isFriend = friendshipRepo.findByRequesterAndReceiverAndStatus(currentUser, user, Status.ACCEPTED).isPresent()
+                    || friendshipRepo.findByReceiverAndRequesterAndStatus(currentUser, user, Status.ACCEPTED).isPresent();
+
+            if (!isFriend) {
+                throw new AccessDeniedException("You are not friends with this user.");
+            }
+        }
 
         List<PostDto> postsUser = postRepo.findAllPostsByUser(user).stream().map(postMapper::toDto).toList();
 
@@ -112,6 +131,12 @@ public class PostServiceImpl implements PostService {
                 .username(user.getUname())
                 .userPhoto(user.getImage())
                 .totalPoints(user.getTotalPoints())
+                .numberBeers(user.getNumberBeers())
+                .numberWhine(user.getNumberWhine())
+                .numberLongDrink(user.getNumberLongDrink())
+                .numberShot(user.getNumberShot())
+                .numberCigarret(user.getNumberCigarret())
+                .numberHeets(user.getNumberHeets())
                 .posts(postsUser)
                 .build();
     }

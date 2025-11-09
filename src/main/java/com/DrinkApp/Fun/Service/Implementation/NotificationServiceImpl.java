@@ -6,6 +6,7 @@ import com.DrinkApp.Fun.Mapper.NotificationMapper;
 import com.DrinkApp.Fun.Repository.NotificationRepo;
 import com.DrinkApp.Fun.Repository.UserRepo;
 import com.DrinkApp.Fun.Service.Interfaces.NotificationService;
+import com.DrinkApp.Fun.Utils.Exceptions.CurrentUserNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -37,13 +38,10 @@ public class NotificationServiceImpl implements NotificationService {
     @Transactional
     @Override
     public boolean markRead(UserDetails userDetails) {
-        Optional<UserEntity> currentUser = userRepo.findByEmail(userDetails.getUsername());
 
-        if (currentUser.isEmpty()){
-            return false;
-        }
+        UserEntity currentUser = userRepo.findByEmail(userDetails.getUsername()).orElseThrow(CurrentUserNotFoundException::new);
 
-        notificationRepo.markAllNotificationsRead(currentUser.get());
+        notificationRepo.markAllNotificationsRead(currentUser);
 
         return true;
     }
@@ -51,7 +49,7 @@ public class NotificationServiceImpl implements NotificationService {
     @Override
     public Long getNumberNotificationsNotSeen(UserDetails userDetails)
     {
-        UserEntity currentUser = userRepo.findByUname(userDetails.getUsername()).orElseThrow();
+        UserEntity currentUser = userRepo.findByUname(userDetails.getUsername()).orElseThrow(CurrentUserNotFoundException::new);
 
         return notificationRepo.countByRecipientAndIsReadFalse(currentUser);
     }

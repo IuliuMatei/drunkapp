@@ -11,6 +11,7 @@ import com.DrinkApp.Fun.Repository.UserRepo;
 import com.DrinkApp.Fun.Service.Interfaces.FriendshipService;
 import com.DrinkApp.Fun.Service.Interfaces.NotificationService;
 import com.DrinkApp.Fun.Utils.Exceptions.*;
+import com.DrinkApp.Fun.Utils.Response.FriendRequestResponse;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -33,7 +34,7 @@ public class FriendshipServiceImpl implements FriendshipService {
 
     @Transactional
     @Override
-    public ResponseEntity<String> sendFriendshipRequest(UserDetails userDetails, String username) {
+    public FriendRequestResponse sendFriendshipRequest(UserDetails userDetails, String username) {
 
         UserEntity receiver = getUserByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
 
@@ -44,7 +45,7 @@ public class FriendshipServiceImpl implements FriendshipService {
         }
 
         if (friendshipRepo.findByRequesterAndReceiver(requester, receiver).isPresent()) {
-            throw  new FriendshipAlreadyRequestedException();
+            throw new FriendshipAlreadyRequestedException();
         }
 
         FriendshipEntity friendshipEntity = FriendshipEntity.builder()
@@ -69,12 +70,12 @@ public class FriendshipServiceImpl implements FriendshipService {
 
         notificationRepo.save(newNotification);
 
-        return ResponseEntity.ok().build();
+        return new FriendRequestResponse("Friend request send");
     }
 
     @Transactional
     @Override
-    public boolean acceptFriendRequest(UserDetails userDetails, Long referenceId) {
+    public FriendRequestResponse acceptFriendRequest(UserDetails userDetails, Long referenceId) {
 
         NotificationEntity notification = notificationRepo.findById(referenceId).orElseThrow(NotificationNotFoundException::new);
 
@@ -95,12 +96,12 @@ public class FriendshipServiceImpl implements FriendshipService {
         notification.setIsRead(true);
         notificationRepo.save(notification);
 
-        return true;
+        return new FriendRequestResponse("Friend request accepted");
     }
 
     @Transactional
     @Override
-    public boolean declineFriendRequest(UserDetails userDetails, Long referenceId)
+    public FriendRequestResponse declineFriendRequest(UserDetails userDetails, Long referenceId)
     {
         NotificationEntity notification = notificationRepo.findById(referenceId).orElseThrow(NotificationNotFoundException::new);
 
@@ -120,7 +121,7 @@ public class FriendshipServiceImpl implements FriendshipService {
         notification.setIsRead(true);
         notificationRepo.save(notification);
 
-        return true;
+        return new FriendRequestResponse("Friend request declined");
     }
 
     public Optional<UserEntity> getUserByUsername(String username) {
