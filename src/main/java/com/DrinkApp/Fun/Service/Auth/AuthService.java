@@ -7,6 +7,8 @@ import com.DrinkApp.Fun.Service.Jwt.JwtService;
 import com.DrinkApp.Fun.Entity.UserEntity;
 import com.DrinkApp.Fun.Utils.Enums.Role;
 import com.DrinkApp.Fun.Repository.UserRepo;
+import com.DrinkApp.Fun.Utils.Exceptions.EmailAlreadyUsedException;
+import com.DrinkApp.Fun.Utils.Exceptions.UsernameAlreadyUsedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -23,7 +25,15 @@ public class AuthService {
     private final AuthenticationManager authenticationManager;
 
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthenticationResponse register(RegisterRequest request) throws EmailAlreadyUsedException, UsernameAlreadyUsedException {
+
+        if (userRepo.findByEmail(request.getEmail()).isPresent()){
+            throw new EmailAlreadyUsedException();
+        }
+
+        if (userRepo.findByUname(request.getUname()).isPresent()){
+            throw new UsernameAlreadyUsedException();
+        }
 
         var user = UserEntity.builder()
                 .uname(request.getUname())
@@ -31,7 +41,6 @@ public class AuthService {
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
                 .build();
-        System.out.println(user);
         userRepo.save(user);
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
@@ -49,8 +58,6 @@ public class AuthService {
         );
 
         var user  = userRepo.findByEmail(request.getEmail()).orElseThrow();
-        System.out.println(request.getPassword());
-        System.out.println(user.getPassword());
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
                 .token(jwtToken)

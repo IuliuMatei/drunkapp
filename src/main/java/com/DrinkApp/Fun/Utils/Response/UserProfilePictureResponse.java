@@ -1,15 +1,17 @@
 package com.DrinkApp.Fun.Utils.Response;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class FriendRequestResponse {
+@Builder
+public class UserProfilePictureResponse {
 
-    private String message;
+    private String uname;
+    private String image;
 
 }

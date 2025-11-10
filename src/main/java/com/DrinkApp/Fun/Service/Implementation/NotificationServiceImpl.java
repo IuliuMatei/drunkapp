@@ -7,6 +7,7 @@ import com.DrinkApp.Fun.Repository.NotificationRepo;
 import com.DrinkApp.Fun.Repository.UserRepo;
 import com.DrinkApp.Fun.Service.Interfaces.NotificationService;
 import com.DrinkApp.Fun.Utils.Exceptions.CurrentUserNotFoundException;
+import com.DrinkApp.Fun.Utils.Exceptions.UserNotFoundException;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,21 +26,18 @@ public class NotificationServiceImpl implements NotificationService {
     private final UserRepo userRepo;
 
     @Override
-    public List<NotificationDto> getAll(UserDetails userDetails) {
-        Optional<UserEntity> recipient = userRepo.findByEmail(userDetails.getUsername());
+    public List<NotificationDto> getAll(UserDetails userDetails) throws UserNotFoundException {
 
-        if (recipient.isEmpty()){
-            return List.of();
-        }
+        UserEntity recipient = userRepo.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
 
-        return notificationRepo.getAllByRecipient(recipient.get()).stream().map(notificationMapper::entityToDto).collect(Collectors.toList());
+        return notificationRepo.getAllByRecipient(recipient).stream().map(notificationMapper::entityToDto).collect(Collectors.toList());
     }
 
     @Transactional
     @Override
-    public boolean markRead(UserDetails userDetails) {
+    public boolean markRead(UserDetails userDetails) throws UserNotFoundException {
 
-        UserEntity currentUser = userRepo.findByEmail(userDetails.getUsername()).orElseThrow(CurrentUserNotFoundException::new);
+        UserEntity currentUser = userRepo.findByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
 
         notificationRepo.markAllNotificationsRead(currentUser);
 
@@ -47,9 +45,8 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     @Override
-    public Long getNumberNotificationsNotSeen(UserDetails userDetails)
-    {
-        UserEntity currentUser = userRepo.findByUname(userDetails.getUsername()).orElseThrow(CurrentUserNotFoundException::new);
+    public Long getNumberNotificationsNotSeen(UserDetails userDetails) throws UserNotFoundException {
+        UserEntity currentUser = userRepo.findByUname(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
 
         return notificationRepo.countByRecipientAndIsReadFalse(currentUser);
     }

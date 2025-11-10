@@ -5,15 +5,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-@NoArgsConstructor
-public class UserNotFoundException extends RuntimeException {
+public class UserNotFoundException extends Exception {
 
-    private String message;
-    private String username;
+    public UserNotFoundException(){
 
-    public UserNotFoundException(String username){
-
-        super("User not found with username: " + username);
+        super("User not found");
 
     }
 }

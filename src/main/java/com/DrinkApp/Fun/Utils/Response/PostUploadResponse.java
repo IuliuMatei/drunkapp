@@ -4,7 +4,6 @@ import lombok.*;
 
 @Data
 @Builder
-@RequiredArgsConstructor
 @AllArgsConstructor
 @NoArgsConstructor
 public class PostUploadResponse {

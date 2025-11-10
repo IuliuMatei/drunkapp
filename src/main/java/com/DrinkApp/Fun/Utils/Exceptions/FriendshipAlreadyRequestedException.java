@@ -3,7 +3,7 @@ package com.DrinkApp.Fun.Utils.Exceptions;
 import lombok.Data;
 
 @Data
-public class FriendshipAlreadyRequestedException extends RuntimeException{
+public class FriendshipAlreadyRequestedException extends Exception{
 
     public FriendshipAlreadyRequestedException(){
 

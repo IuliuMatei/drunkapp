@@ -1,6 +1,9 @@
 package com.DrinkApp.Fun.Controller;
 
 import com.DrinkApp.Fun.Service.Interfaces.FriendshipService;
+import com.DrinkApp.Fun.Utils.Exceptions.FriendshipAlreadyRequestedException;
+import com.DrinkApp.Fun.Utils.Exceptions.SameUserFriendshipException;
+import com.DrinkApp.Fun.Utils.Exceptions.UserNotFoundException;
 import com.DrinkApp.Fun.Utils.Response.FriendRequestResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,7 +21,8 @@ public class FriendshipController {
 
     @PostMapping("/request")
     public ResponseEntity<?> sendFriendRequest(@AuthenticationPrincipal UserDetails userDetails,
-                                                    @RequestParam String username) {
+                                                    @RequestParam String username) throws UserNotFoundException, SameUserFriendshipException, FriendshipAlreadyRequestedException {
+
         FriendRequestResponse friendRequestResponse = friendShipService.sendFriendshipRequest(userDetails, username);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(friendRequestResponse);
@@ -26,7 +30,7 @@ public class FriendshipController {
 
     @PutMapping("/accept/{referenceId}")
     public ResponseEntity<?> acceptFriendRequest(@AuthenticationPrincipal UserDetails userDetails,
-                                                    @PathVariable Long referenceId) {
+                                                    @PathVariable Long referenceId) throws UserNotFoundException, SameUserFriendshipException {
 
         FriendRequestResponse friendRequestResponse = friendShipService.acceptFriendRequest(userDetails, referenceId);
 
@@ -35,7 +39,7 @@ public class FriendshipController {
 
     @PutMapping("/decline/{referenceId}")
     public ResponseEntity<?> declineFriendRequest(@AuthenticationPrincipal UserDetails userDetails,
-                                                    @PathVariable Long referenceId) {
+                                                    @PathVariable Long referenceId) throws UserNotFoundException, SameUserFriendshipException {
 
         FriendRequestResponse friendRequestResponse = friendShipService.declineFriendRequest(userDetails, referenceId);
 

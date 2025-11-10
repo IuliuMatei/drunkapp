@@ -5,7 +5,9 @@ import com.DrinkApp.Fun.Entity.UserEntity;
 import com.DrinkApp.Fun.Mapper.UserMapper;
 import com.DrinkApp.Fun.Repository.UserRepo;
 import com.DrinkApp.Fun.Service.Implementation.S3ServiceImpl;
+import com.DrinkApp.Fun.Utils.Exceptions.CurrentUserNotFoundException;
 import com.DrinkApp.Fun.Utils.Response.ImageUploadResponse;
+import com.DrinkApp.Fun.Utils.Response.UserProfilePictureResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -34,6 +36,17 @@ public class UserService {
         userRepo.save(currentUser);
 
         return new ImageUploadResponse("Image uploaded successfully");
+
+    }
+
+    public UserProfilePictureResponse findUsernameAndImage(UserDetails userDetails) {
+
+        UserEntity currentUser = userRepo.findByEmail(userDetails.getUsername()).orElseThrow(CurrentUserNotFoundException::new);
+
+        return UserProfilePictureResponse.builder()
+                .uname(currentUser.getUname())
+                .image(currentUser.getImage())
+                .build();
 
     }
 }

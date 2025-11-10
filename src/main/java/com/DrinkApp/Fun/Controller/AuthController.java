@@ -5,6 +5,8 @@ import com.DrinkApp.Fun.Service.Auth.AuthService;
 import com.DrinkApp.Fun.Utils.Auth.AuthenticationRequest;
 import com.DrinkApp.Fun.Utils.Auth.AuthenticationResponse;
 import com.DrinkApp.Fun.Utils.Auth.RegisterRequest;
+import com.DrinkApp.Fun.Utils.Exceptions.EmailAlreadyUsedException;
+import com.DrinkApp.Fun.Utils.Exceptions.UsernameAlreadyUsedException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -20,7 +22,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/register")
-    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<AuthenticationResponse> register(@RequestBody RegisterRequest request) throws EmailAlreadyUsedException, UsernameAlreadyUsedException {
         return ResponseEntity.ok(authService.register(request));
     }
 

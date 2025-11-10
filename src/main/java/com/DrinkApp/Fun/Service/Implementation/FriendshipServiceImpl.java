@@ -34,9 +34,9 @@ public class FriendshipServiceImpl implements FriendshipService {
 
     @Transactional
     @Override
-    public FriendRequestResponse sendFriendshipRequest(UserDetails userDetails, String username) {
+    public FriendRequestResponse sendFriendshipRequest(UserDetails userDetails, String username) throws UserNotFoundException, SameUserFriendshipException, FriendshipAlreadyRequestedException {
 
-        UserEntity receiver = getUserByUsername(username).orElseThrow(() -> new UserNotFoundException(username));
+        UserEntity receiver = getUserByUsername(username).orElseThrow(UserNotFoundException::new);
 
         UserEntity requester = getUserByEmail(userDetails.getUsername()).orElseThrow(UserNotFoundException::new);
 
@@ -44,7 +44,9 @@ public class FriendshipServiceImpl implements FriendshipService {
             throw new SameUserFriendshipException();
         }
 
-        if (friendshipRepo.findByRequesterAndReceiver(requester, receiver).isPresent()) {
+        Optional<FriendshipEntity> friendshipStillPending = friendshipRepo.findByRequesterAndReceiver(requester, receiver);
+
+        if (friendshipStillPending.isPresent() && friendshipStillPending.get().getStatus().equals(Status.PENDING)) {
             throw new FriendshipAlreadyRequestedException();
         }
 
@@ -75,7 +77,7 @@ public class FriendshipServiceImpl implements FriendshipService {
 
     @Transactional
     @Override
-    public FriendRequestResponse acceptFriendRequest(UserDetails userDetails, Long referenceId) {
+    public FriendRequestResponse acceptFriendRequest(UserDetails userDetails, Long referenceId) throws UserNotFoundException, SameUserFriendshipException {
 
         NotificationEntity notification = notificationRepo.findById(referenceId).orElseThrow(NotificationNotFoundException::new);
 
@@ -101,8 +103,7 @@ public class FriendshipServiceImpl implements FriendshipService {
 
     @Transactional
     @Override
-    public FriendRequestResponse declineFriendRequest(UserDetails userDetails, Long referenceId)
-    {
+    public FriendRequestResponse declineFriendRequest(UserDetails userDetails, Long referenceId) throws UserNotFoundException, SameUserFriendshipException {
         NotificationEntity notification = notificationRepo.findById(referenceId).orElseThrow(NotificationNotFoundException::new);
 
         if (notification.getType() != NotificationType.FRIEND_REQUEST){

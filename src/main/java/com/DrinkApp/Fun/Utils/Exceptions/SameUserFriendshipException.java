@@ -4,7 +4,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
-public class SameUserFriendshipException extends RuntimeException{
+public class SameUserFriendshipException extends Exception{
 
     public SameUserFriendshipException() {
 
