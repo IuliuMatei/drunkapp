@@ -17,7 +17,8 @@ public class PostDto {
 
     private Long id;
 
-    private UserEntity user;
+    private String uname;
+    private String imageProfile;
     private String description;
     private LocalDateTime createdAt;
     private String image;

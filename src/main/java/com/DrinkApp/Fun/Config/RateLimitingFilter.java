@@ -13,7 +13,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class RateLimitingFilter implements Filter {
 
-    private static final int MAX_REQUESTS_PER_MINUTE = 5;
+    private static final int MAX_REQUESTS_PER_MINUTE = 200;
     private final Map<String, AtomicInteger> requestCounts = new ConcurrentHashMap<>();
 
     public RateLimitingFilter() {

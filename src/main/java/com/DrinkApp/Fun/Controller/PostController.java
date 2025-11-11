@@ -3,6 +3,7 @@ package com.DrinkApp.Fun.Controller;
 import com.DrinkApp.Fun.Dto.PostDto;
 import com.DrinkApp.Fun.Service.Interfaces.PostService;
 import com.DrinkApp.Fun.Utils.Enums.DrinkName;
+import com.DrinkApp.Fun.Utils.Exceptions.UserNotFoundException;
 import com.DrinkApp.Fun.Utils.Response.PostUploadResponse;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -27,7 +28,7 @@ public class PostController {
     private final PostService postService;
 
     @GetMapping("/feed")
-    public ResponseEntity<List<PostDto>> getAllPosts(@AuthenticationPrincipal UserDetails userDetails) {
+    public ResponseEntity<List<PostDto>> getAllPosts(@AuthenticationPrincipal UserDetails userDetails) throws UserNotFoundException {
 
         return ResponseEntity.status(HttpStatus.OK).body(postService.getAllPosts(userDetails));
 

@@ -14,6 +14,8 @@ import com.DrinkApp.Fun.Service.Interfaces.S3Service;
 import com.DrinkApp.Fun.Utils.Enums.DrinkName;
 import com.DrinkApp.Fun.Utils.Enums.Status;
 import com.DrinkApp.Fun.Utils.Exceptions.CurrentUserNotFoundException;
+import com.DrinkApp.Fun.Utils.Exceptions.NotFriendsException;
+import com.DrinkApp.Fun.Utils.Exceptions.UserNotFoundException;
 import com.DrinkApp.Fun.Utils.Response.PostUploadResponse;
 import com.DrinkApp.Fun.Utils.Response.UserProfileResponse;
 import jakarta.transaction.Transactional;
@@ -40,10 +42,10 @@ public class PostServiceImpl implements PostService {
     private final FriendshipRepo friendshipRepo;
 
     @Override
-    public List<PostDto> getAllPosts(UserDetails userDetails) {
+    public List<PostDto> getAllPosts(UserDetails userDetails) throws UserNotFoundException {
 
         UserEntity currentUser = userRepo.findByEmail(userDetails.getUsername())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(UserNotFoundException::new);
 
         List<PostEntity> posts = postRepo.findAllPostsForUserAndFriends(currentUser.getId());
 
@@ -108,8 +110,8 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public UserProfileResponse getFeedByUser(String username) {
-        UserEntity user = userRepo.findByUname(username).orElseThrow(() -> new RuntimeException("User not found"));
+    public UserProfileResponse getFeedByUser(String username) throws UserNotFoundException, NotFriendsException {
+        UserEntity user = userRepo.findByUname(username).orElseThrow(UserNotFoundException::new);
 
         String currentEmail = SecurityContextHolder.getContext().getAuthentication().getName();
         UserEntity currentUser = userRepo.findByEmail(currentEmail)
@@ -120,7 +122,7 @@ public class PostServiceImpl implements PostService {
                     || friendshipRepo.findByReceiverAndRequesterAndStatus(currentUser, user, Status.ACCEPTED).isPresent();
 
             if (!isFriend) {
-                throw new AccessDeniedException("You are not friends with this user.");
+                throw new NotFriendsException();
             }
         }
 

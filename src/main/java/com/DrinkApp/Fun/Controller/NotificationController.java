@@ -2,6 +2,7 @@ package com.DrinkApp.Fun.Controller;
 
 import com.DrinkApp.Fun.Dto.NotificationDto;
 import com.DrinkApp.Fun.Service.Interfaces.NotificationService;
+import com.DrinkApp.Fun.Utils.Exceptions.UserNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,12 +23,12 @@ public class NotificationController {
     NotificationService notificationService;
 
     @GetMapping("/all")
-    public ResponseEntity<List<NotificationDto>> getAll(@AuthenticationPrincipal UserDetails userDetails){
+    public ResponseEntity<List<NotificationDto>> getAll(@AuthenticationPrincipal UserDetails userDetails) throws UserNotFoundException {
         return ResponseEntity.status(HttpStatus.OK).body(notificationService.getAll(userDetails));
     }
 
-    @PutMapping("mark-read")
-    public ResponseEntity<?> markReadAll(@AuthenticationPrincipal UserDetails userDetails){
+    @PutMapping("read-notifications")
+    public ResponseEntity<?> markReadAll(@AuthenticationPrincipal UserDetails userDetails) throws UserNotFoundException {
 
         if (!notificationService.markRead(userDetails)){
             return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
@@ -37,8 +38,7 @@ public class NotificationController {
     }
 
     @GetMapping("/not-seen")
-    public ResponseEntity<?> getNumberNotificationsNotSeen(@AuthenticationPrincipal UserDetails userDetails)
-    {
+    public ResponseEntity<?> getNumberNotificationsNotSeen(@AuthenticationPrincipal UserDetails userDetails) throws UserNotFoundException {
         Long notificationNotSeen = notificationService.getNumberNotificationsNotSeen(userDetails);
 
         return ResponseEntity.status(HttpStatus.OK).body(notificationNotSeen);

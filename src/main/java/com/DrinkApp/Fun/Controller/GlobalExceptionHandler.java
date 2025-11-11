@@ -64,4 +64,10 @@ public class GlobalExceptionHandler {
                 .body("JWT expired, please log in again.");
     }
 
+    @ExceptionHandler(NotFriendsException.class)
+    public ResponseEntity<?> handleNotFriendsExcpetion(NotFriendsException ex) {
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body("JWT expired, please log in again.");
+    }
+
 }
