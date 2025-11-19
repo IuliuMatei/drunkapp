@@ -29,6 +29,6 @@ public class FriendshipEntity {
     @Enumerated(EnumType.STRING)
     private Status status = Status.PENDING;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 }
 

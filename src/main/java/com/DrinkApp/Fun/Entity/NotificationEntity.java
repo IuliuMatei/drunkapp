@@ -34,7 +34,7 @@ public class NotificationEntity {
     private String message;
     private Boolean isRead = false;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
 }
 

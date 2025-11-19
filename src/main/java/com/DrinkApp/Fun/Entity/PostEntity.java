@@ -24,7 +24,7 @@ public class PostEntity {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private LocalDateTime createdAt;
 
     @OneToOne(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private PhotoEntity image;
